@@ -432,11 +432,7 @@ const Checkout = () => {
               </div>
             </div>
           </Card>
-          <Button
-            type="button"
-            onClick={form.handleSubmit}
-            title="clique aqui para finalizar a compra"
-          >
+          <Button type="button" title="clique aqui para finalizar a compra">
             Finalizar compra
           </Button>
         </form>
