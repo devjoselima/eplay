@@ -13,8 +13,7 @@ import cartao from '../../assets/cartao.png'
 
 const Checkout = () => {
   const [payWithCard, setPayWithCard] = useState(false)
-  const [purchase, { isError, isLoading, data, isSuccess }] =
-    usePurchaseMutation()
+  const [purchase, { data, isSuccess, isLoading }] = usePurchaseMutation()
 
   const form = useFormik({
     initialValues: {
@@ -74,15 +73,15 @@ const Checkout = () => {
         payWithCard ? schema.required('O campo é obrigatório') : schema
       ),
 
-      expiresYear: Yup.string()
-        .min(5, 'o campo deve ter no minimo 5 caracteres')
-        .required('Este campo é obrigatório'),
+      expiresYear: Yup.string().when((values, schema) =>
+        payWithCard ? schema.required('O campo é obrigatório') : schema
+      ),
 
       cardCode: Yup.string().when((values, schema) =>
         payWithCard ? schema.required('O campo é obrigatório') : schema
       ),
 
-      installments: Yup.string().when((values, schema) =>
+      installments: Yup.number().when((values, schema) =>
         payWithCard ? schema.required('O campo é obrigatório') : schema
       )
     }),
@@ -257,7 +256,7 @@ const Checkout = () => {
           <Card title="Pagamento">
             <div>
               <TabButton
-                isActive={!payWithCard}
+                isactive={!payWithCard}
                 onClick={() => setPayWithCard(false)}
                 type="button"
               >
@@ -265,7 +264,7 @@ const Checkout = () => {
                 Boleto bancario
               </TabButton>
               <TabButton
-                isActive={payWithCard}
+                isactive={payWithCard}
                 onClick={() => setPayWithCard(true)}
                 type="button"
               >
@@ -312,7 +311,7 @@ const Checkout = () => {
                         </small>
                       </InputGroup>
                     </Row>
-                    <Row marginTop="24px">
+                    <Row margintop="24px">
                       <InputGroup>
                         <label htmlFor="cardDisplayName">Nome no cartão</label>
                         <input
@@ -347,7 +346,7 @@ const Checkout = () => {
                           )}
                         </small>
                       </InputGroup>
-                      <InputGroup maxWidth="123px">
+                      <InputGroup maxwidth="123px">
                         <label htmlFor="expiresMonth">Mês do vencimento</label>
                         <input
                           type="text"
@@ -364,7 +363,7 @@ const Checkout = () => {
                           )}
                         </small>
                       </InputGroup>
-                      <InputGroup maxWidth="123px">
+                      <InputGroup maxwidth="123px">
                         <label htmlFor="expiresYear">Ano do vencimento</label>
                         <input
                           type="text"
@@ -381,7 +380,7 @@ const Checkout = () => {
                           )}
                         </small>
                       </InputGroup>
-                      <InputGroup maxWidth="48px">
+                      <InputGroup maxwidth="48px">
                         <label htmlFor="cardCode">CVV</label>
                         <input
                           type="text"
@@ -396,8 +395,8 @@ const Checkout = () => {
                         </small>
                       </InputGroup>
                     </Row>
-                    <Row marginTop="24px">
-                      <InputGroup maxWidth="150px">
+                    <Row margintop="24px">
+                      <InputGroup maxwidth="150px">
                         <label htmlFor="installments">Parcelamento</label>
                         <select
                           id="installments"
@@ -406,16 +405,16 @@ const Checkout = () => {
                           onChange={form.handleChange}
                           onBlur={form.handleBlur}
                         >
-                          <small>
-                            {getErrorMessage(
-                              'installments',
-                              form.errors.installments
-                            )}
-                          </small>
                           <option value="">1x de R$ 200,00</option>
                           <option value="">2x de R$ 100,00</option>
                           <option value="">4x de R$ 50,00</option>
                         </select>
+                        <small>
+                          {getErrorMessage(
+                            'installments',
+                            form.errors.installments
+                          )}
+                        </small>
                       </InputGroup>
                     </Row>
                   </>
@@ -432,7 +431,11 @@ const Checkout = () => {
               </div>
             </div>
           </Card>
-          <Button type="button" title="clique aqui para finalizar a compra">
+          <Button
+            type="button"
+            title="clique aqui para finalizar a compra"
+            onClick={form.handleSubmit}
+          >
             Finalizar compra
           </Button>
         </form>
