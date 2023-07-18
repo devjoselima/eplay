@@ -18,6 +18,10 @@ export const Row = styled.div<RowProps>`
   align-items: flex-end;
   column-gap: 24px;
   margin-top: ${(props) => props.margintop || '0'};
+
+  @media (max-width: ${breakpoints.tablet}) {
+    display: block;
+  }
 `
 export const InputGroup = styled.div<InputGroupProps>`
   flex: auto;
@@ -42,6 +46,10 @@ export const InputGroup = styled.div<InputGroupProps>`
     &.error {
       border: 3px solid red;
     }
+  }
+
+  @media (max-width: ${breakpoints.tablet}) {
+    margin-top: 16px;
   }
 `
 

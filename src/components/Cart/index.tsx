@@ -33,23 +33,28 @@ const Cart = () => {
     <S.CartContainer className={isOpen ? 'is-open' : ''}>
       <S.Overlay onClick={closeCart} />
       <S.Sidebar className={isOpen ? 'slideOpen' : 'slideClose'}>
-        <ul>
-          {items.map((items) => (
-            <S.CartItem key={items.id}>
-              <img src={items.media.thumbnail} alt={items.name} />
-              <div>
-                <h3>{items.name}</h3>
-                <Tag>{items.details.category}</Tag>
-                <Tag>{items.details.system}</Tag>
-                <span>{priceFormat(items.prices.current)}</span>
-              </div>
-              <button onClick={() => removeFromCart(items.id)} type="button" />
-            </S.CartItem>
-          ))}
-        </ul>
-        <S.Quantity>{items.length} jogo(s) no carrinho</S.Quantity>
-        {items.length > 0 && (
+        {items.length > 0 ? (
           <>
+            {items.map((items) => (
+              <>
+                <ul>
+                  <S.CartItem key={items.id}>
+                    <img src={items.media.thumbnail} alt={items.name} />
+                    <div>
+                      <h3>{items.name}</h3>
+                      <Tag>{items.details.category}</Tag>
+                      <Tag>{items.details.system}</Tag>
+                      <span>{priceFormat(items.prices.current)}</span>
+                    </div>
+                    <button
+                      onClick={() => removeFromCart(items.id)}
+                      type="button"
+                    />
+                  </S.CartItem>
+                </ul>
+              </>
+            ))}
+            <S.Quantity>{items.length} jogo(s) no carrinho</S.Quantity>
             <S.Prices>
               Total de {priceFormat(getTotalPrice(items))}{' '}
               <span>Em até 6x sem juros</span>
@@ -62,6 +67,11 @@ const Cart = () => {
               Continuar com a compra
             </Button>
           </>
+        ) : (
+          <p className="empty-text">
+            O carrinho está vazio, adicione pelo menos um produto para continuar
+            com a compra
+          </p>
         )}
       </S.Sidebar>
     </S.CartContainer>

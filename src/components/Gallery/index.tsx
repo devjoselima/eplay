@@ -1,6 +1,5 @@
 import { useState } from 'react'
 
-import { GalleryItem } from '../../pages/Home'
 import Section from '../../components/Section'
 
 import * as S from './styles'
