@@ -1,5 +1,14 @@
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { breakpoints, colors } from '../../styles'
+
+const slideOpen = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`
 
 export const Links = styled.ul`
   display: flex;
@@ -49,9 +58,12 @@ export const HeaderRow = styled.div`
 
 export const NavMobile = styled.nav`
   display: none;
+  animation-duration: 0.7s;
+  animation-fill-mode: forwards;
 
   &.is-open {
     display: block;
+    animation-name: ${slideOpen};
   }
 `
 
