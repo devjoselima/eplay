@@ -1,22 +1,18 @@
 import { useDispatch, useSelector } from 'react-redux'
-import Button from '../Button'
-
-import {
-  Overlay,
-  CartContainer,
-  Sidebar,
-  Prices,
-  Quantity,
-  CartItem
-} from './styles'
+import { useNavigate } from 'react-router-dom'
 
 import Tag from '../Tag'
+import Button from '../Button'
+
 import { RootReducer } from '../../store'
+import { getTotalPrice, priceFormat } from '../../utils'
 import { close, remove } from '../../store/reducers/cart'
-import { formataPreco } from '../ProductList'
+
+import * as S from './styles'
 
 const Cart = () => {
   const { isOpen, items } = useSelector((state: RootReducer) => state.cart)
+  const navigate = useNavigate()
 
   const dispatch = useDispatch()
 
@@ -24,44 +20,51 @@ const Cart = () => {
     dispatch(close())
   }
 
-  const getTotalPrice = () => {
-    return items.reduce((acumulator, currentPrice) => {
-      return (acumulator += currentPrice.prices.current!)
-    }, 0)
-  }
-
   const removeFromCart = (id: number) => {
     dispatch(remove(id))
   }
 
+  const goToCheckout = () => {
+    navigate('/checkout')
+    closeCart()
+  }
+
   return (
-    <CartContainer className={isOpen ? 'is-open' : ''}>
-      <Overlay onClick={closeCart} />
-      <Sidebar className={isOpen ? 'slideOpen' : 'slideClose'}>
+    <S.CartContainer className={isOpen ? 'is-open' : ''}>
+      <S.Overlay onClick={closeCart} />
+      <S.Sidebar className={isOpen ? 'slideOpen' : 'slideClose'}>
         <ul>
           {items.map((items) => (
-            <CartItem key={items.id}>
+            <S.CartItem key={items.id}>
               <img src={items.media.thumbnail} alt={items.name} />
               <div>
                 <h3>{items.name}</h3>
                 <Tag>{items.details.category}</Tag>
                 <Tag>{items.details.system}</Tag>
-                <span>{formataPreco(items.prices.current)}</span>
+                <span>{priceFormat(items.prices.current)}</span>
               </div>
               <button onClick={() => removeFromCart(items.id)} type="button" />
-            </CartItem>
+            </S.CartItem>
           ))}
         </ul>
-        <Quantity>{items.length} jogo(s) no carrinho</Quantity>
-        <Prices>
-          Total de {formataPreco(getTotalPrice())}{' '}
-          <span>Em até 6x sem juros</span>
-        </Prices>
-        <Button title="Clique aqui para continuar com a compra" type="button">
-          Continuar com a compra
-        </Button>
-      </Sidebar>
-    </CartContainer>
+        <S.Quantity>{items.length} jogo(s) no carrinho</S.Quantity>
+        {items.length > 0 && (
+          <>
+            <S.Prices>
+              Total de {priceFormat(getTotalPrice(items))}{' '}
+              <span>Em até 6x sem juros</span>
+            </S.Prices>
+            <Button
+              title="Clique aqui para continuar com a compra"
+              type="button"
+              onClick={goToCheckout}
+            >
+              Continuar com a compra
+            </Button>
+          </>
+        )}
+      </S.Sidebar>
+    </S.CartContainer>
   )
 }
 
